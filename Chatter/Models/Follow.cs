@@ -17,7 +17,7 @@ namespace Chatter.Models
   
 
         //Navigation properties.... "virtual" means it can be overridden
-        public virtual ICollection<Rating> Ratings { get; set; }
+        public virtual ICollection<User> UserID { get; set; }
         public virtual ICollection<Business> Businesses { get; set; }
 
 
