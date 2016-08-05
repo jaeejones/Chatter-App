@@ -5,13 +5,14 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Chatter.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
 
-    {
+    {   
         //public string ProfilePicUrl { get; set; }
         //need to find how to use hashset for password
         //HashSet<string> PasswordHashset = new HashSet<string> { get; set; }
@@ -50,13 +51,16 @@ namespace Chatter.Models
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(x => x.Followers).WithMany(x => x.Following)
                 .Map(x => x.ToTable("Followers")
-                    .MapLeftKey("UserId")
+                    .MapLeftKey("UserId")// we dont have a userID
                     .MapRightKey("FollowerId"));
+            base.OnModelCreating(modelBuilder);
         }
 
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Chatter.Models.Chat> Chats { get; set; }
     }
 }
