@@ -26,6 +26,7 @@ namespace Chatter.Models
         //Navigation properties.... "virtual" means it can be overridden
         public virtual ICollection<ApplicationUser> Following { get; set; }
         public virtual ICollection<ApplicationUser> Followers { get; set; }
+        public string Post { get; internal set; }
 
         //--------------------------------------------------------------------------------------------------------------------
 
