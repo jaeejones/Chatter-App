@@ -10,8 +10,10 @@ namespace Chatter.Models
         public int ChatID { get; set; }
         [Maxlength(150)]
         public string Chat { get; set; }
-        public int TimeStamp { get; set; }
+        public DateTime TimeStamp { get; set; }
         public string UserID { get; set; }
 
+
+        public virtual ApplicationUser 
     }
 }

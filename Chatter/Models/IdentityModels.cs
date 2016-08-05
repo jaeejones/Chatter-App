@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
+using System.Collections.Generic;
 
 namespace Chatter.Models
 {
@@ -10,24 +12,21 @@ namespace Chatter.Models
     public class ApplicationUser : IdentityUser
 
     {
-        public string UserID { get; set; }
-        [MaxLength(50)]
-        public string Username { get; set; }
-        public string Name { get; set; }
-        public string ProfilePicUrl { get; set; }
+        //public string ProfilePicUrl { get; set; }
         //need to find how to use hashset for password
         //HashSet<string> PasswordHashset = new HashSet<string> { get; set; }
         //var Password = new HashSet<int>(Password.Users.Select(char => c.UserID));
-        [DataType(DataType.EmailAddress)]
-        public string Email { get; set; }
+       
         //Revisit for better variable type to store location
-        public string Description { get; set; }
-        public string LastUpdate { get; set; }
-        public int FollowerAccount { get; set; }     
+        //public string Description { get; set; }
+        //public DateTime LastUpdate { get; set; }
+        //public int FollowerAccount { get; set; }     
 
         //Navigation properties.... "virtual" means it can be overridden
-        public virtual ICollection<Rating> Ratings { get; set; }
-        public virtual ICollection<Business> Businesses { get; set; }
+        public virtual ICollection<ApplicationUser> Following { get; set; }
+        public virtual ICollection<ApplicationUser> Followers { get; set; }
+
+        //--------------------------------------------------------------------------------------------------------------------
 
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -44,6 +43,15 @@ namespace Chatter.Models
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(x => x.Followers).WithMany(x => x.Following)
+                .Map(x => x.ToTable("Followers")
+                    .MapLeftKey("UserId")
+                    .MapRightKey("FollowerId"));
         }
 
         public static ApplicationDbContext Create()
